@@ -43,6 +43,13 @@ font-family: "Comic Sans MS", cursive, sans-serif;
 margin-top: -140px;
 
 }
+/*business catalog heading*/
+#weconnect-heading-2
+{
+    text-align: center;
+    font-size: 50px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
 /* Styling the text and password boxes */
 input[type=text], input[type=password] 
 {
@@ -96,12 +103,14 @@ table
     width: 100%;
     margin-top: 10px;
 }
-td, th {
+td, th 
+{
     border: 1px solid #dddddd;
     text-align: left;
     padding: 10px;
 }
 
-tr:nth-child(even) {
+tr:nth-child(even) 
+{
     background-color: #dddddd;
 }
