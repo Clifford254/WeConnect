@@ -21,4 +21,12 @@ class UserAccountTestCases(unittest.TestCase)
 
         del self.user
     
+    def test_password_length(self):
+        """checking for password length"""
+
+        msg = self.user.registerUser(
+            "cliff","cliff@gmail.com","cliffor","cliffor")
+        self.assertEqual(
+            msg,"Your password should be atleat 8 characters")
+            
 
