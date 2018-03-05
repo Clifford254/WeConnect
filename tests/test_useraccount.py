@@ -8,7 +8,7 @@ class UserAccountTestCases(unittest.TestCase)
         Test for duplicate account
         Test for special character in username
         Test for invalid email address
-        test for correct inputs
+        test for correct inputs register
         test login with no account
         Test login with wrong password
         Test login with correct email and password
@@ -55,4 +55,10 @@ class UserAccountTestCases(unittest.TestCase)
             "cl!ff", "cliff@gmail.com", "clifford", "clifford") 
         self.assertIn("No special character in username", msg)
 
-        
+    def test_invalid_email(self):
+        """check if email is valid"""
+
+        msg =(
+            "cliff", "cliffgmail.com", "clifford", "clifford")
+        self.assertEqual(msg,"Enter a valid email address")
+    
