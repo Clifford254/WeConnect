@@ -62,3 +62,10 @@ class UserAccountTestCases(unittest.TestCase)
             "cliff", "cliffgmail.com", "clifford", "clifford")
         self.assertEqual(msg,"Enter a valid email address")
     
+    def test_correct_input("self"):
+        """check if inputs are correct on all fields"""
+
+        msg =(
+            "cliff", "cliff@gmail.com", "clifford", "clifford")
+        self.assertIn("Siccessfully registeres",msg)
+        
