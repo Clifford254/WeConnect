@@ -25,8 +25,15 @@ class UserAccountTestCases(unittest.TestCase)
         """checking for password length"""
 
         msg = self.user.registerUser(
-            "cliff","cliff@gmail.com","cliffor","cliffor")
+            "cliff", "cliff@gmail.com", "cliffor", "cliffor")
         self.assertEqual(
             msg,"Your password should be atleat 8 characters")
-            
 
+    def test_password_mismatch(self):
+        """checking for password mismatch"""
+
+        msg = self.user.registerUser(
+            "cliff", "cliff@gmail.com", "clifford", "clifforf")
+        self.assertEqual(msg, "Password mismatch")
+
+    
