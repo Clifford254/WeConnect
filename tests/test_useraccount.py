@@ -36,4 +36,11 @@ class UserAccountTestCases(unittest.TestCase)
             "cliff", "cliff@gmail.com", "clifford", "clifforf")
         self.assertEqual(msg, "Password mismatch")
 
-    
+    def test_duplicate_user(user):
+        """checking for duplicate user"""
+        
+        self.user.registerUser(
+            "cliff", "cliff@gmail.com", "clifford", "clifford")
+        msg = self.user.registerUser(
+            "cliff", "cliff@gmail.com", "clifford", "clifford")
+        self.assertIn("User already exists", msg)
