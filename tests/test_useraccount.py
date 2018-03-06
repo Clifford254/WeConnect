@@ -1,8 +1,8 @@
 """file to handle testing of user account """
 import unittest
-from app.useraccount import UserClass
+from useraccount import UserClass
 
-class UserAccountTestCases(unittest.TestCase)
+class UserAccountTestCases(unittest.TestCase):
     """ Test for password length
         Test for password mismatch when registering
         Test for duplicate account
@@ -62,7 +62,7 @@ class UserAccountTestCases(unittest.TestCase)
             "cliff", "cliffgmail.com", "clifford", "clifford")
         self.assertEqual(msg,"Enter a valid email address")
     
-    def test_correct_input("self"):
+    def test_correct_input(self):
         """check if inputs are correct on all fields"""
 
         msg =(
@@ -93,5 +93,5 @@ class UserAccountTestCases(unittest.TestCase)
         msg = self.user.login("cliff@gmail.com","clifford")
         self.assertIn(msg,"You can now Register a Business")
 
-if __name__ == '__main__'
+if __name__ == '__main__':
     unittest.main()      
