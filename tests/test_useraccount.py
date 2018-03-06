@@ -85,4 +85,12 @@ class UserAccountTestCases(unittest.TestCase)
         msg = self.user.login("cliff@gmail.com","clifford25")
         self.assertEqual(msg,"Wrong password")
 
-    
+    def test_correctlogin(self):
+        """checks if user provide correct credentials"""
+
+        self.user.user_list = [
+            {'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
+        msg = self.user.login("cliff@gmail.com","clifford")
+        self.assertIn(msg,"You can now Register a Business")
+
+        
