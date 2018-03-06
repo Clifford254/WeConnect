@@ -64,22 +64,22 @@ class UserAccountTestCases(unittest.TestCase):
     def test_login_withoutaccount(self):
         """checks if user account exist"""
 
-        self.user.user_list = [{'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
-        msg = self.user.login("clifford@gmail.com","clifford25")
+        self.user.user_list = [{'username':'cliff','password':'clifford', 'email':'cliff@gmail.com'}]
+        msg = self.user.login("username","clifford25")
         self.assertEqual(msg,"User does not exist, please register")
 
     def test_login_wrongpassword(self):
         """checks for wrong password during login"""
 
-        self.user.user_list = [{'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
-        msg = self.user.login("cliff@gmail.com","clifford25")
+        self.user.user_list = [{'username':'cliff','password':'clifford','email':'cliff@gmail.com'}]
+        msg = self.user.login("cliff","clifford25")
         self.assertEqual(msg,"Wrong password")
 
     def test_correctlogin(self):
         """checks if user provide correct credentials"""
 
         self.user.user_list = [{'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
-        msg = self.user.login("cliff@gmail.com","clifford")
+        msg = self.user.login("cliff","clifford")
         self.assertIn(msg,"You can now Register a Business")
 
 if __name__ == '__main__':
