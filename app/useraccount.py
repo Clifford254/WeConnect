@@ -48,7 +48,7 @@ class UserClass(object):
         return "You have no account,please sign up"
 
     def changePassword(self, npassword, cpassword):
-        #Change password
+        #reset password
         for user in self.user_list:
             if npassword == cpassword:
                 user['password'] = npassword
@@ -56,10 +56,4 @@ class UserClass(object):
             return "The new passwords should match"
         return "User does not exist, sign up!"
 
-    def get_user_by_email(self, user):
-        for item in self.user_list:
-            if item['username'] == user:
-                email = item['email']
-                return email
-        else:
-            return False
+   
