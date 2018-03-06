@@ -93,4 +93,5 @@ class UserAccountTestCases(unittest.TestCase)
         msg = self.user.login("cliff@gmail.com","clifford")
         self.assertIn(msg,"You can now Register a Business")
 
-        
+if __name__ == '__main__'
+    unittest.main()      
