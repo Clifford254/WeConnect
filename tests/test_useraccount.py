@@ -1,6 +1,6 @@
 """file to handle testing of user account """
 import unittest
-from useraccount import UserClass
+from app.useraccount import UserClass
 
 class UserAccountTestCases(unittest.TestCase):
     """ Test for password length
