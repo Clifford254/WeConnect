@@ -67,5 +67,12 @@ class UserAccountTestCases(unittest.TestCase)
 
         msg =(
             "cliff", "cliff@gmail.com", "clifford", "clifford")
-        self.assertIn("Siccessfully registeres",msg)
-        
+        self.assertIn("Successfully registered",msg)
+
+    def test_login_withoutaccount(self):
+        """checks if user account exist"""
+
+        self.user.user_list = [
+            {'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
+        msg = self.user.login("clifford@gmail.com","clifford25")
+        self.assertEqual(msg,"User does not exist, please register")
