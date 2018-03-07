@@ -66,7 +66,7 @@ class UserAccountTestCases(unittest.TestCase):
 
         self.user.user_list = [{'username':'cliff','password':'clifford', 'email':'cliff@gmail.com'}]
         msg = self.user.login("username","clifford25")
-        self.assertEqual(msg,"User does not exist, please register")
+        self.assertEqual(msg,"User have no, please register")
 
     def test_login_wrongpassword(self):
         """checks for wrong password during login"""
