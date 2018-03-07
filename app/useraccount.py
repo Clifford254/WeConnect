@@ -43,9 +43,9 @@ class UserClass(object):
         for user in self.user_list:
             if username == user['username']:
                 if password == user['password']:
-                    return "Successfully logged in, create event!"
-                return "Password mismatch"
-        return "You have no account,please sign up"
+                    return "Successfully logged in.You can now Register a Business"
+                return "Wrong password"
+        return "User have no account, please register"
 
     def changePassword(self, npassword, cpassword):
         #reset password
