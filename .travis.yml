@@ -4,6 +4,7 @@ python:
 install:
      "pip install -r requirements.txt"   
 script:
-     - "python tests/test_useraccount.py"
-     - "coverage run app/useraccount.py"
+    - nosetests
+    - nosetests --with-coverage
+    - coveralls
 after_success: coveralls
