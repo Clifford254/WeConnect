@@ -4,8 +4,6 @@ python:
 install:
      "pip install -r requirements.txt"   
 script:
-     - "python tests/test_business.py"
      - "python tests/test_useraccount.py"
-     - "coverage run useraccount.py"
-     - "coverage run business.py"
+     - "coverage run app/useraccount.py"
 after_success: coveralls
