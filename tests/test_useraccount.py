@@ -1,86 +1,117 @@
 """file to handle testing of user account """
 import unittest
 from app.useraccount import UserClass
+import unittest
+import json
+from app import app
+from app.useraccount import UserClass
 
-class UserAccountTestCases(unittest.TestCase):
-    """ Test for password length
-        Test for password mismatch when registering
-        Test for duplicate account
-        Test for special character in username
-        Test for invalid email address
-        test for correct inputs register
-        test login with no account
-        Test login with wrong password
-        Test login with correct email and password
-    """
+
+class UserTestCase(unittest.TestCase):
 
     def setUp(self):
-        """set up UserClass before anything"""
-        
+        self.app = app
+        self.client = self.app.test_client()
         self.user = UserClass()
+
+        self.user_details = {
+            'username': 'cliff',
+            'email': 'bla@bla.com',
+            'password': '12345678',
+            'cpassword': '12345678'
+        }
 
     def tearDown(self):
         """removing user class after everything"""
-
         del self.user
-    
-    def test_password_length(self):
-        """checking for password length"""
-
-        msg = self.user.registerUser( "cliff", "cliff@gmail.com", "cliffor", "cliffor")
-        self.assertEqual(msg,"Your password should be atleast 8 characters")
-
-    def test_password_mismatch(self):
-        """checking for password mismatch"""
-
-        msg = self.user.registerUser("cliff", "cliff@gmail.com", "clifford", "clifforf")
-        self.assertEqual(msg, "Password mismatch")
 
     def test_duplicate_user(self):
-        """checking for duplicate user"""
+        """check if inputs are correct on all fields"""
+        self.user.registerUser("cliff", "bla@bla.com", "clifford", "clifford")
+        password_duplicate_user = {'username': 'cliff', 'email': 'bla@bla.com','password': 'clifford','cpassword': 'clifford'}
+        response = self.client.post('/api/v1/auth/register', data=json.dumps(password_duplicate_user),
+                                    content_type='application/json'
+                                    )
+        response_data = response.get_data(as_text=True)
+        self.assertEqual(response_data, "User already exists.Please login")
 
-        self.user.registerUser("cliff", "cliff@gmail.com", "clifford", "clifford")
-        msg = self.user.registerUser("cliff", "cliff@gmail.com", "clifford", "clifford")
-        self.assertIn("User already exists.Please login", msg)
+    def test_short_password_length(self):
+        """check if password is too short"""
+        password_length = {'username': 'cliffer', 'email': 'bla@blah.com','password': '12367','cpassword': '12367'}
+        response = self.client.post('/api/v1/auth/register', data=json.dumps(password_length),
+                                    content_type='application/json'
+                                    )
+        response_data = response.get_data(as_text=True)
+        self.assertEqual(response_data, "Your password should be atleast 8 characters")
 
-    def test_special_characters(self):
-        """checking if username contains special chsracters"""
-
-        msg = self.user.registerUser("cl!ff", "cliff@gmail.com", "clifford", "clifford") 
-        self.assertIn("No special characters (. , ! space [] )", msg)
+    def test_invalid_username(self):
+        """check if inputs are correct on all fields"""
+        invalid_username = {'username': '@@@@@', 'email': 'blabla.com','password': '12345678','cpassword': '12345678'}
+        response = self.client.post('/api/v1/auth/register', data=json.dumps(invalid_username),
+                                    content_type='application/json'
+                                    )
+        response_data = response.get_data(as_text=True)
+        self.assertEqual(response_data, "No special characters (. , ! space [] )")
 
     def test_invalid_email(self):
         """check if email is valid"""
+        invalid_email = {'username': 'clifff', 'email': 'blabla.com','password': '12345678','cpassword': '12345678'}
+        response = self.client.post('/api/v1/auth/register', data=json.dumps(invalid_email),
+                                    content_type='application/json'
+                                    )
+        response_data = response.get_data(as_text=True)
+        self.assertEqual(response_data, "Enter a valid email address")
 
-        msg =self.user.registerUser("cliff", "cliffgmail.com", "clifford", "clifford")
-        self.assertEqual(msg,"Enter a valid email address")
-    
-    def test_correct_input(self):
-        """check if inputs are correct on all fields"""
+   
 
-        msg =self.user.registerUser("cliff", "cliff@gmail.com", "clifford", "clifford")
-        self.assertIn("Successfully registered. You can now login!",msg)
+  
+    def test_special_characters(self):
+        """checking if username contains special chsracters"""
 
-    def test_login_withoutaccount(self):
-        """checks if user account exist"""
+        register_user = {'username': '#@$%yubh', 'email': 'blabla.com','password': '12345678','cpassword': '12345678'}
+        register = self.client.post('/api/v1/auth/register', data=json.dumps(register_user),
+                                    content_type='application/json')
 
-        self.user.user_list = [{'username':'cliff','password':'clifford', 'email':'cliff@gmail.com'}]
-        msg = self.user.login("username","clifford25")
-        self.assertEqual(msg,"User have no account, please register")
+        response_data = register.get_data(as_text=True)
+        self.assertEqual( response_data, "No special characters (. , ! space [] )")
+
+    def test_login_without_account(self):
+        """checks if user logs in without account """
+
+        no_account = {'username': 'clifffer','password': '12345678'}
+        response = self.client.post('/api/v1/auth/login', data=json.dumps(no_account),
+                                    content_type='application/json'
+                                    )
+        response_data = response.get_data(as_text=True)
+        self.assertEqual(response_data, "User have no account, please register")
 
     def test_login_wrongpassword(self):
         """checks for wrong password during login"""
 
-        self.user.user_list = [{'username':'cliff','password':'clifford','email':'cliff@gmail.com'}]
-        msg = self.user.login("cliff","clifford25")
-        self.assertEqual(msg,"Wrong password")
+        no_account = {'username': 'cliff','password': '12367sfrdtfygujkl8'}
+        register_user = {'username': 'cliff', 'email': 'blabla.com','password': '12345678','cpassword': '12345678'}
+        self.client.post('/api/v1/auth/register', data=json.dumps(register_user),
+                                    content_type='application/json'
+                                    )
+        login = self.client.post('/api/v1/auth/login', data=json.dumps(no_account),
+                                    content_type='application/json'
+                                    )
+        response_data = login.get_data(as_text=True)
+        self.assertEqual(response_data,"Wrong password")
 
     def test_correctlogin(self):
         """checks if user provide correct credentials"""
 
-        self.user.user_list = [{'username':'cliff','email':'cliff@gmail.com','password':'clifford' }]
-        msg = self.user.login("cliff","clifford")
-        self.assertIn(msg,"Successfully logged in.You can now Register a Business")
+        login_user = {'username': 'cliff','password': '12345678'}
+        register_user = {'username': 'cliff', 'email': 'blabla.com','password': '12345678','cpassword': '12345678'}
+        self.client.post('/api/v1/auth/register', data=json.dumps(register_user),
+                                    content_type='application/json'
+                                    )
+        login = self.client.post('/api/v1/auth/login', data=json.dumps(login_user),
+                                    content_type='application/json'
+                                    )
+        response_data = login.get_data(as_text=True)
+        self.assertEqual(response_data, "Successfully logged in.You can now Register a Business")
 
 if __name__ == '__main__':
     unittest.main()      
