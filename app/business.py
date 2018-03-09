@@ -1,5 +1,6 @@
 """ Handle creation, deletion and editing of businesses"""
 import re
+from flask import session
 
 
 class BusinessClass(object):
@@ -19,10 +20,8 @@ class BusinessClass(object):
 
     def allBusinesses(self):
         """ returns all existing businesses """
-        all_businesses = [
-            item for item in self.businesses_list
-        ]
-        return all_businesses
+        return self.businesses_list
+
     def get_business_by_name(self, business_name):
         """ return the business with the given name"""
 
@@ -36,18 +35,58 @@ class BusinessClass(object):
         """ Handles creation of businesses """          
         #Check for special characters
         if re.match("^[a-zA-Z0-9 _]*$", business_name):
-            #Get users business lists
-            my_business = self.getOwner(user)
-            #check if name of list already exists
+            my_business = session['username'] == user
+        else:
+            return "No special characters (. , ! space [] )"
+        #Get users business lists    
+        #check if name of business list already exists
+        if my_business:
             businesses_dict = {
                 'name': business_name,
                 'owner': user,
                 'category': category,
                 'location': location,
             }
-            self.businesses_list.append(businesses_dict),"successfully registered above business"
-        else:
-            return "No special characters (. , ! space [] )"
-        return self.getOwner(user)
+            print my_business
+            self.businesses_list.append(businesses_dict)
+            return "Successfully registered above business."
+        return "Please login to register a business."
 
     
+    def editBusiness(self, edit_name, old_name, user):
+        """ Handles edits made to business name """           
+        #edited name and original name
+        # print(len(self.businesses_list))
+        if re.match("^[a-zA-Z0-9 _]*$", edit_name):
+            #Get users business lists
+            my_business = self.getOwner(user)
+            businesses = [business for business in my_business if business["name"] == old_name]
+            if not businesses:
+                return "Business not found, Updpate failed"
+
+            found_business = businesses[0]
+            del found_business['name']
+            edit_dict = {
+                'name': edit_name
+                }
+            found_business.update(edit_dict) 
+            return self.getOwner(user)               
+        else:
+            return "No special characters (. , ! space [] )"
+        
+
+    
+    def deleteBusiness(self, busines_name, user):
+        # Handles removal of businesss using list comprehension
+        my_business = self.getOwner(user)
+
+        businesses = [business for business in self.businesses_list if business["name"] == business_name]
+        if not businesses:
+            return "Deletion failed , Business Not found"
+        # print("Current length of business list is ",len(self.businesses_list))
+        found_business = business[0]
+        new_business_list = [business for business in self.businesses_list if business["name"] != business_name]
+        self.businesses_list = new_business_list
+        # print(len(self.businesses_list))
+        # print("Updated Length of business list is ",len(self.businesses_list))
+        return self.businesses_list

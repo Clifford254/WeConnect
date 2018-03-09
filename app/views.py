@@ -1,5 +1,6 @@
 """ view file to handle views """
 import os
+import requests 
 from flask import request, session, jsonify
 from app import app
 from app.useraccount import UserClass
@@ -21,14 +22,12 @@ def register():
     """ User registration """
     
     if request.method == "POST":
-            username = request.json['username']
-            email = request.json['email']
-            password = request.json['password']
-            cpassword = request.json['cpassword']
+            username = request.json.get('username')
+            email = request.json.get('email')
+            password = request.json.get('password')
+            cpassword = request.json.get('cpassword')
                            
-            msg = user.registerUser(username, email, password, cpassword)
-            response = jsonify(msg)
-            response.status_code = 201
+            response = user.registerUser(username, email, password, cpassword)
             return response
 
 @app.route('/api/v1/auth/login', methods=['GET', 'POST'])
@@ -48,19 +47,21 @@ def business():
     """ create business """
     if session.get('username') is not None:
         if request.method == "POST":
-            business_name = request.json['business_name']
-            user = request.json['user']
-            category = request.json['category']
-            location = request.json['location']
-            msg = businessC.createBusiness(business_name, user, category, location,)
-            response = jsonify(msg)
-            response.status_code = 201
-            return response
+           user = request.json['owner']
+           category = request.json['category']
+           location = request.json['location']
+           business_name = request.json['business_name']
+           msg = businessC.createBusiness(business_name, user, category, location,)
+           response = jsonify(msg)
+           response.status_code = 201
+           return response
         elif request.method == "GET":
             business = businessC.allBusinesses()
             
             return jsonify(business)    
-    return jsonify({"message": "Please Login"}) 
+    return jsonify({"message": "Please Login"})
+
+
 
 @app.route('/api/v1/business/<businessId>', methods=['PUT'])
 def edit_business(businessId):
@@ -73,6 +74,17 @@ def edit_business(businessId):
             update_business = businessC.editBusiness(edit_name, old_name, user)
             return jsonify(update_business)
     return jsonify({"message": "Please Login"})
+
+@app.route('/api/v1/business/<businessId>', methods=['GET'])
+def get_business(businessId):
+    """ edit business """
+    if session.get('username') is not None:
+        if request.method == "GET":
+            business_name = businessId
+            get_business = businessC.get_business_by_name(business_name)
+            return jsonify(get_business)
+    return jsonify({"message": "Please Login"})
+
 
 @app.route('/api/v1/business/<businessId>', methods=['DELETE'])
 def delete_business(businessId):
