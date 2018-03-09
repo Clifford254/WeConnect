@@ -7,6 +7,9 @@ This repository contains an application helps you register businesses. It allows
 # How to use application
 
 Register an account
+
 Login with the credentials used during registration
+
 Register a Business
+
 View a business catalog/Business reviews
