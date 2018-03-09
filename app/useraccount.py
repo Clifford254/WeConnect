@@ -13,39 +13,48 @@ class UserClass(object):
         """create registered users by adding to dictionary
            Empty dict to hold each user"""
         user_dict = {}
-    
+        #chsck if user already exists
         for user in self.user_list:
             if username == user['username']:
                 return "User already exists.Please login"
             elif email == user['email']:
-                return "User already exists.Please login"
+                msg="User already exists.Please login"
+                return msg
         #Check for right password length
         if len(password) < 8:
-            return "Your password should be atleast 8 characters"
+            msg="Your password should be atleast 8 characters"
+            return msg
         #Check for special characters in username
-        elif not re.match("^[a-zA-Z0-9_]*$", username):
-            return "No special characters (. , ! space [] )"
+        if not re.match("^[a-zA-Z0-9_]*$", username):
+            msg="No special characters (. , ! space [] )"
+            return msg
         #Check for correct email
-        elif not re.match(r"(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)", email):
-            return "Enter a valid email address"
+        if not re.match(r"(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)", email):
+            msg = "Enter a valid email address"
+            return msg
         #Password Mismatch
-        elif password == cpassword:
+        if password == cpassword:
             user_dict['username'] = username
             user_dict['email'] = email
             user_dict['password'] = password
             self.user_list.append(user_dict)
+            msg = "Successfully registered. You can now login!"
+            return msg
         else:
-            return "Password mismatch"
-        return "Successfully registered. You can now login!"
+            msg ="Password mismatch"
+            return msg
 
     def login(self, username, password):
         #Log in users
         for user in self.user_list:
             if username == user['username']:
                 if password == user['password']:
-                    return "Successfully logged in.You can now Register a Business"
-                return "Wrong password"
-        return "User have no account, please register"
+                    msg = "Successfully logged in.You can now Register a Business"
+                    return msg
+                msg = "Wrong password"
+                return msg
+        msg = "User have no account, please register"
+        return  msg
 
     def changePassword(self, npassword, cpassword):
         #reset password
